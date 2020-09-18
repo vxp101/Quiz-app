@@ -169,7 +169,7 @@ function handler() {
     else if (store.showingQuestion === true) {
       let answer = $('input[name="answer"]:checked').val();
       
-
+      
 
       if (answer === store.questions[store.questionNumber].correctAnswer) {
         store.score += 1;
