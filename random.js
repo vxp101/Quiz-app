@@ -39,12 +39,12 @@ const store = {
     {
       question: 'Euclid\'s geometry is a mathematical treatise explaining solids of:',
       answers: [
-        '1 Dimension',
-        '2 Dimensions',
-        '3 Dimensions',
-        '4 Dimensions'
+        'Flat Surfaces',
+        'Curved Surfaces',
+        'Complex plane',
+        'Trigonometry'
       ],
-      correctAnswer: '2 Dimensions'
+      correctAnswer: 'Flat Surfaces'
     },
     {
       question: 'One of these is not like the other:',
