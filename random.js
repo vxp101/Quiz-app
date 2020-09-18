@@ -37,14 +37,14 @@ const store = {
       correctAnswer: 'Hydrochloric Acid'
     },
     {
-      question: 'Euclid\'s geometry is a mathematical treatise explaining solids of:',
+      question: 'Euclid\'s Elements is a mathematical treatise explaining :',
       answers: [
-        '1 Dimension',
-        '2 Dimensions',
-        '3 Dimensions',
-        '4 Dimensions'
+        'Flat Surfaces',
+        'Curved Surfaces',
+        'Complex plane',
+        'Trigonometry'
       ],
-      correctAnswer: '2 Dimensions'
+      correctAnswer: 'Flat Surfaces'
     },
     {
       question: 'One of these is not like the other:',
