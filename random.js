@@ -47,7 +47,7 @@ const store = {
       correctAnswer: 'Flat Surfaces'
     },
     {
-      question: 'One of these is not like the other:',
+      question: 'One of these is not like the others:',
       answers: [
         'Nautilus Shell',
         'Fibonacci Spiral',
