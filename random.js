@@ -1,6 +1,8 @@
 /* eslint-disable quotes */
 /* eslint-disable strict */
 
+
+/* Store object */
 const store = {
 
   questions: [
@@ -81,6 +83,8 @@ const store = {
 
 };
 
+
+/* Template generating functions */
 function renderQuestionTemplate() {
   return ` <form class="flex-column flex-center"><p class="question"><span class="num">Question ${store.questionNumber + 1} of ${store.questions.length}</span> ${store.questions[store.questionNumber].question}</p><div class="inp">
   <input type="radio" id="answer1" name="answer" value="${store.questions[store.questionNumber].answers[0]}" class="answer1" required>
@@ -115,11 +119,11 @@ function renderQuestionTemplate() {
 }
 
 function renderResponseTemplate() {
-  return `<button class='next' type='submit'>Proceed</button><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p>`;
+  return `<form class="flex-column flex-center"><button class='next' type='submit'>Proceed</button><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p></form>`;
 }
 
 function renderLastResponseTemplate() {
-  return `<p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p><p>You are done with this interview for the position of Junior Universe Saviour with ${store.score} correct and ${store.incorrect} incorrect. We will reach out to you in case you are a fit for saving the Universe. Thank you!</p><button type="submit" class="retake">Retake Quiz</button>`;
+  return `<form class="flex-column flex-center"><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p><p>You are done with this interview for the position of Junior Universe Saviour with ${store.score} correct and ${store.incorrect} incorrect. We will reach out to you in case you are a fit for saving the Universe. Thank you!</p><button type="submit" class="retake">Retake Quiz</button></form>`;
 }
 
 function renderStartTemplate () {
@@ -127,26 +131,42 @@ function renderStartTemplate () {
 }
 
 
+
+
+/* Rendering functions */
+function renderQuestions() {
+   return $('main').html(renderQuestionTemplate);
+}
+
+
+function renderLastResponse() {
+  template = renderLastResponseTemplate();
+  return $('main').html(template);
+}
+
+
+
+
+/* Event handler functions */
 function retakeQuiz() {
   $('.geoplants').on('click', '.retake', function (e) {
     e.preventDefault();
     store.questionNumber = 0;
     store.incorrect = 0;
     store.score = 0;
-    $('form').html(renderQuestionTemplate);
+    renderQuestions();
   });
 }
+
+
 function start() {
 
   $('.geoplants').on('click', '.start', function (e) {
     
     e.preventDefault();
     store.quizStarted = true;
-    $('form').html(renderQuestionTemplate);
-
-
-  });
-
+    renderQuestions();
+ });
 }
 
 
@@ -165,9 +185,8 @@ function errorNoSelection() {
 
 function handler() {
   $('main').on('submit', 'form', function (e) {
-    
     e.preventDefault();
-    let template = '';
+    
 
     
 
@@ -178,19 +197,20 @@ function handler() {
       
 
       if ($('input[name="answer"]:checked').val() === store.questions[store.questionNumber].correctAnswer) {
-
+        
         store.score += 1;
         store.response = 'Good job. You are one step closer to saving the universe!';
-        template = renderLastResponseTemplate();
+        
       }
       else {
+        
         store.incorrect += 1;
         store.response = `The correct answer is ${store.questions[store.questionNumber].correctAnswer}! Come on bud. The universe needs you!`;
-        template = renderLastResponseTemplate();
+        
       }
        
-
-      $('form').html(template);
+      renderLastResponse();
+      
     }
 
 
@@ -217,24 +237,25 @@ function handler() {
       template = renderQuestionTemplate();
       store.showingQuestion = true;
     }
-    $('form').html(template);
+    $('main').html(template);
 
   });
 }
 
 
+function quizStarted() {
+  if (!store.quizStarted) {
+    $('main').html(renderStartTemplate);
+  }
+}
+
 
 function appLive() {
-
+  quizStarted();
   start();
   handler();
   errorNoSelection();
   retakeQuiz();
-
-
-  if (!store.quizStarted) {
-    $('main').html(renderStartTemplate);
-  }
 }
 
 $(appLive);
