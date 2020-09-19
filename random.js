@@ -85,6 +85,13 @@ const store = {
 
 
 /* Template generating functions */
+
+
+function renderStartTemplate () {
+  return `<form class="flex-column flex-center"><p>The Universe we call home is in serious trouble. Without intervention it will suffer instant heat death. The kitty overlord that oversees the happenings of the Universe is looking for talented Junior Universe Saviours. The absolute requirements include masterful proficiency in plant biology and geometry. This quiz will serve as the beginning step for your application. Good luck!</p><button class="start" type="button">Start Quiz</button></form>`;
+}
+
+
 function renderQuestionTemplate() {
   return ` <form class="flex-column flex-center"><p class="question"><span class="num">Question ${store.questionNumber + 1} of ${store.questions.length}</span> ${store.questions[store.questionNumber].question}</p><div class="inp">
   <input type="radio" id="answer1" name="answer" value="${store.questions[store.questionNumber].answers[0]}" class="answer1" required>
@@ -113,9 +120,6 @@ function renderQuestionTemplate() {
 
 
 `;
-
-
-
 }
 
 function renderResponseTemplate() {
@@ -126,18 +130,28 @@ function renderLastResponseTemplate() {
   return `<form class="flex-column flex-center"><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p><p>You are done with this interview for the position of Junior Universe Saviour with ${store.score} correct and ${store.incorrect} incorrect. We will reach out to you in case you are a fit for saving the Universe. Thank you!</p><button type="submit" class="retake">Retake Quiz</button></form>`;
 }
 
-function renderStartTemplate () {
-  return `<form class="flex-column flex-center"><p>The Universe we call home is in serious trouble. Without intervention it will suffer instant heat death. The kitty overlord that oversees the happenings of the Universe is looking for talented Junior Universe Saviours. The absolute requirements include masterful proficiency in plant biology and geometry. This quiz will serve as the beginning step for your application. Good luck!</p><button class="start" type="button">Start Quiz</button></form>`;
-}
+
 
 
 
 
 /* Rendering functions */
-function renderQuestions() {
-   return $('main').html(renderQuestionTemplate);
+
+function renderStart() {
+  template = renderStartTemplate();
+  $('main').html(template);
 }
 
+
+function renderQuestions() {
+  template = renderQuestionTemplate();
+   return $('main').html(template);
+}
+
+function renderResponse() {
+  template = renderResponseTemplate();
+  return $('main').html(template);
+}
 
 function renderLastResponse() {
   template = renderLastResponseTemplate();
@@ -148,19 +162,15 @@ function renderLastResponse() {
 
 
 /* Event handler functions */
-function retakeQuiz() {
-  $('.geoplants').on('click', '.retake', function (e) {
-    e.preventDefault();
-    store.questionNumber = 0;
-    store.incorrect = 0;
-    store.score = 0;
-    renderQuestions();
-  });
+
+function quizStarted() {
+  if (!store.quizStarted) {
+    renderStart();
+  }
 }
 
 
 function start() {
-
   $('.geoplants').on('click', '.start', function (e) {
     
     e.preventDefault();
@@ -187,15 +197,10 @@ function handler() {
   $('main').on('submit', 'form', function (e) {
     e.preventDefault();
     
-
-    
-
-
     if (store.questionNumber + 1 === store.questions.length) {
       store.quizStarted = false;
 
       
-
       if ($('input[name="answer"]:checked').val() === store.questions[store.questionNumber].correctAnswer) {
         
         store.score += 1;
@@ -222,31 +227,33 @@ function handler() {
       if (answer === store.questions[store.questionNumber].correctAnswer) {
         store.score += 1;
         store.response = 'Good job. You are one step closer to saving the universe!';
-        template = renderResponseTemplate();
+        renderResponse();
 
       } else {
         store.incorrect += 1;
         store.response = `The correct answer is ${store.questions[store.questionNumber].correctAnswer}! Come on bud. The universe needs you!`;
-        template = renderResponseTemplate();
+        renderResponse();
 
       }
       store.showingQuestion = false;
     } else {
       
       store.questionNumber += 1;
-      template = renderQuestionTemplate();
+      renderQuestions();
       store.showingQuestion = true;
     }
-    $('main').html(template);
-
   });
 }
 
 
-function quizStarted() {
-  if (!store.quizStarted) {
-    $('main').html(renderStartTemplate);
-  }
+function retakeQuiz() {
+  $('.geoplants').on('click', '.retake', function (e) {
+    e.preventDefault();
+    store.questionNumber = 0;
+    store.incorrect = 0;
+    store.score = 0;
+    renderQuestions();
+  });
 }
 
 
