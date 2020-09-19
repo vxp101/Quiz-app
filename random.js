@@ -114,6 +114,19 @@ function renderQuestionTemplate() {
 
 }
 
+function renderResponseTemplate() {
+  return `<button class='next' type='submit'>Proceed</button><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p>`;
+}
+
+function renderLastResponseTemplate() {
+  return `<p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p><p>You are done with this interview for the position of Junior Universe Saviour with ${store.score} correct and ${store.incorrect} incorrect. We will reach out to you in case you are a fit for saving the Universe. Thank you!</p><button type="submit" class="retake">Retake Quiz</button>`;
+}
+
+function renderStartTemplate () {
+  return `<form class="flex-column flex-center"><p>The Universe we call home is in serious trouble. Without intervention it will suffer instant heat death. The kitty overlord that oversees the happenings of the Universe is looking for talented Junior Universe Saviours. The absolute requirements include masterful proficiency in plant biology and geometry. This quiz will serve as the beginning step for your application. Good luck!</p><button class="start" type="button">Start Quiz</button></form>`;
+}
+
+
 function retakeQuiz() {
   $('.geoplants').on('click', '.retake', function (e) {
     e.preventDefault();
@@ -135,6 +148,8 @@ function start() {
   });
 
 }
+
+
 
 function errorNoSelection() {
   $('main').on('click', 'button', function(e) {
@@ -166,15 +181,14 @@ function handler() {
 
         store.score += 1;
         store.response = 'Good job. You are one step closer to saving the universe!';
+        template = renderLastResponseTemplate();
       }
       else {
         store.incorrect += 1;
         store.response = `The correct answer is ${store.questions[store.questionNumber].correctAnswer}! Come on bud. The universe needs you!`;
-        /*
-        template = `<button class='next' type='submit'>Next</button><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score}</span> <br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p>`;
-        */
+        template = renderLastResponseTemplate();
       }
-      template = `<p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p><p>You are done with this interview for the position of Junior Universe Saviour with ${store.score} correct and ${store.incorrect} incorrect. We will reach out to you in case you are a fit for saving the Universe. Thank you!</p><button type="submit" class="retake">Retake Quiz</button>`;
+       
 
       $('form').html(template);
     }
@@ -188,12 +202,12 @@ function handler() {
       if (answer === store.questions[store.questionNumber].correctAnswer) {
         store.score += 1;
         store.response = 'Good job. You are one step closer to saving the universe!';
-        template = `<button class='next' type='submit'>Proceed</button><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p>`;
+        template = renderResponseTemplate();
 
       } else {
         store.incorrect += 1;
         store.response = `The correct answer is ${store.questions[store.questionNumber].correctAnswer}! Come on bud. The universe needs you!`;
-        template = `<button class='next' type='submit'>Proceed</button><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p>`;
+        template = renderResponseTemplate();
 
       }
       store.showingQuestion = false;
@@ -208,24 +222,22 @@ function handler() {
   });
 }
 
-function render() {
+
+
+function appLive() {
 
   start();
   handler();
   errorNoSelection();
   retakeQuiz();
 
+
   if (!store.quizStarted) {
-    $('main').html(`<form class="flex-column flex-center"><p>The Universe we call home is in serious trouble. Without intervention it will suffer instant heat death. The kitty overlord that oversees the happenings of the Universe is looking for talented Junior Universe Saviours. The absolute requirements include masterful proficiency in plant biology and geometry. This quiz will serve as the beginning step for your application. Good luck!</p><button class="start" type="button">Start Quiz</button></form>`);
-
-    return "Quiz started";
+    $('main').html(renderStartTemplate);
   }
-
-
-
 }
 
-$(render);
+$(appLive);
 
 
 
