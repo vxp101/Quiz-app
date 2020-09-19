@@ -82,7 +82,7 @@ const store = {
 };
 
 function renderQuestionTemplate() {
-  return ` <form class="flex-column flex-center"><p class="question"><span class="num">Question ${store.questionNumber + 1} of ${store.questions.length}</span> ${store.questions[store.questionNumber].question}</p><div>
+  return ` <form class="flex-column flex-center"><p class="question"><span class="num">Question ${store.questionNumber + 1} of ${store.questions.length}</span> ${store.questions[store.questionNumber].question}</p><div class="inp">
   <input type="radio" id="answer1" name="answer" value="${store.questions[store.questionNumber].answers[0]}" class="answer1" required>
   <label class="btn" for="answer1" class="answer2">${store.questions[store.questionNumber].answers[0]}</label>
 
@@ -101,7 +101,7 @@ function renderQuestionTemplate() {
 <input type="radio" id="answer4" name="answer" value="${store.questions[store.questionNumber].answers[3]}" class="answer4"  required>
 <label class="btn" for="answer4" class="answer4">${store.questions[store.questionNumber].answers[3]}</label>
 <br></div>
-<button class='next' type='submit'>Next</button>
+<button class='next error-checker' type='submit'>Next</button>
 
 <br>
 
@@ -136,11 +136,25 @@ function start() {
 
 }
 
+function errorNoSelection() {
+  $('main').on('click', 'button', function(e) {
+    if ($(e.currentTarget).text() === 'Next') {
+      if (!$('input[name="answer"]:checked').val()) {
+        $('.inp').addClass('red-border');
+      }
+    }
+  })
+}
+
+
+
 function handler() {
   $('main').on('submit', 'form', function (e) {
     
     e.preventDefault();
     let template = '';
+
+    
 
 
     if (store.questionNumber + 1 === store.questions.length) {
@@ -174,12 +188,12 @@ function handler() {
       if (answer === store.questions[store.questionNumber].correctAnswer) {
         store.score += 1;
         store.response = 'Good job. You are one step closer to saving the universe!';
-        template = `<button class='next' type='submit'>Next</button><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p>`;
+        template = `<button class='next' type='submit'>Proceed</button><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p>`;
 
       } else {
         store.incorrect += 1;
         store.response = `The correct answer is ${store.questions[store.questionNumber].correctAnswer}! Come on bud. The universe needs you!`;
-        template = `<button class='next' type='submit'>Next</button><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p>`;
+        template = `<button class='next' type='submit'>Proceed</button><p>${store.response}</p><p><span class="correct">Correct answer: ${store.score} </span><br><span class="incorrect">Incorrect answers: ${store.incorrect}</span></p>`;
 
       }
       store.showingQuestion = false;
@@ -198,6 +212,7 @@ function render() {
 
   start();
   handler();
+  errorNoSelection();
   retakeQuiz();
 
   if (!store.quizStarted) {
